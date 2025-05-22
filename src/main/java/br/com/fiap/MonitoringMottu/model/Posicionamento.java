@@ -24,7 +24,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Localização {
+public class Posicionamento {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
