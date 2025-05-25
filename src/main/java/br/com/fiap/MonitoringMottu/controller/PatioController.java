@@ -30,80 +30,76 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/patios")
 @Slf4j
 public class PatioController {
-    
-    public record PatioFilter(String id_patio, String nome, String endereco) {
-    }
 
-    @Autowired
-    private PatioRepository repository;
+        public record PatioFilter(Long id_patio, String nome, String endereco) {
+        }
 
-    @GetMapping
-    @Cacheable("patios")
-    @Operation(description = "Listar todos os patios", tags = "patios", summary = "List all patios", 
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Patios listados com sucesso"),
-                    @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
-            })
-    public Page<Patio> index(PatioFilter filter, @PageableDefault(size = 3, sort = "nome", direction = Direction.DESC) Pageable pageable) {
-        var specification = PatioSpecification.withFilter(filter);
-        return repository.findAll(specification, pageable);
-    }
+        @Autowired
+        private PatioRepository repository;
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    @CacheEvict(value = "patios", allEntries = true)
-    @Operation(description = "Criar um novo patio", tags = "patios", summary = "Create a new patio", 
-            responses = {
-                    @ApiResponse(responseCode = "201", description = "Patio criado com sucesso"),
-                    @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
-            })
-    public Patio create(@Valid @RequestBody Patio patio) {
-        log.info("Criando patio: " + patio.getNome());
-        return repository.save(patio);
-    }
+        @GetMapping
+        @Cacheable("patios")
+        @Operation(description = "Listar todos os patios", tags = "patios", summary = "List all patios", responses = {
+                        @ApiResponse(responseCode = "200", description = "Patios listados com sucesso"),
+                        @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
+        })
+        public Page<Patio> index(PatioFilter filter,
+                        @PageableDefault(size = 3, sort = "nome", direction = Direction.DESC) Pageable pageable) {
+                var specification = PatioSpecification.withFilter(filter);
+                return repository.findAll(specification, pageable);
+        }
 
-    @GetMapping("{id_patio}")
-    @ResponseStatus(HttpStatus.OK)
-    @Operation(description = "Buscar um patio por ID", tags = "patios", summary = "Get a patio by ID", 
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Patio encontrado com sucesso"),
-                    @ApiResponse(responseCode = "404", description = "Patio não encontrado")
-            })
-    public Patio get(Long id) {
-        log.info("Buscando patio: " + id);
-        return getPatio(id);
-    }
+        @PostMapping
+        @ResponseStatus(HttpStatus.CREATED)
+        @CacheEvict(value = "patios", allEntries = true)
+        @Operation(description = "Criar um novo patio", tags = "patios", summary = "Create a new patio", responses = {
+                        @ApiResponse(responseCode = "201", description = "Patio criado com sucesso"),
+                        @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
+        })
+        public Patio create(@Valid @RequestBody Patio patio) {
+                log.info("Criando patio: " + patio.getNome());
+                return repository.save(patio);
+        }
 
-    @DeleteMapping("{id_patio}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @CacheEvict(value = "patios", allEntries = true)
-    @Operation(description = "Deletar um patio por ID", tags = "patios", summary = "Delete a patio by ID", 
-            responses = {
-                    @ApiResponse(responseCode = "204", description = "Patio deletado com sucesso"),
-                    @ApiResponse(responseCode = "404", description = "Patio não encontrado")
-            })
-    public void delete(Long id) {
-        log.info("Deletando patio: " + id);
-        repository.delete(getPatio(id));
-    }
+        @GetMapping("{id_patio}")
+        @ResponseStatus(HttpStatus.OK)
+        @Operation(description = "Buscar um patio por ID", tags = "patios", summary = "Get a patio by ID", responses = {
+                        @ApiResponse(responseCode = "200", description = "Patio encontrado com sucesso"),
+                        @ApiResponse(responseCode = "404", description = "Patio não encontrado")
+        })
+        public Patio get(Long id) {
+                log.info("Buscando patio: " + id);
+                return getPatio(id);
+        }
 
-    @CacheEvict(value = "patios", allEntries = true)
-    @PutMapping("{id_patio}")
-    @ResponseStatus(HttpStatus.OK)
-    @Operation(description = "Atualizar um patio por ID", tags = "patios", summary = "Update a patio by ID", 
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Patio atualizado com sucesso"),
-                    @ApiResponse(responseCode = "404", description = "Patio não encontrado")
-            })
-    public Patio update(@PathVariable Long id, @RequestBody @Valid Patio patio) {
-        log.info("Atualizando game: " + id);
-        
-        getPatio(id);
-        patio.setId_patio(id);
-        return repository.save(patio);
-    }
+        @DeleteMapping("{id_patio}")
+        @ResponseStatus(HttpStatus.NO_CONTENT)
+        @CacheEvict(value = "patios", allEntries = true)
+        @Operation(description = "Deletar um patio por ID", tags = "patios", summary = "Delete a patio by ID", responses = {
+                        @ApiResponse(responseCode = "204", description = "Patio deletado com sucesso"),
+                        @ApiResponse(responseCode = "404", description = "Patio não encontrado")
+        })
+        public void delete(@PathVariable Long id) {
+                log.info("Deletando patio: " + id);
+                repository.delete(getPatio(id));
+        }
 
-    private Patio getPatio(Long id) {
-        return repository.findById(id).orElseThrow(() -> new RuntimeException("Patio não encontrado"));
-    }
+        @CacheEvict(value = "patios", allEntries = true)
+        @PutMapping("{id_patio}")
+        @ResponseStatus(HttpStatus.OK)
+        @Operation(description = "Atualizar um patio por ID", tags = "patios", summary = "Update a patio by ID", responses = {
+                        @ApiResponse(responseCode = "200", description = "Patio atualizado com sucesso"),
+                        @ApiResponse(responseCode = "404", description = "Patio não encontrado")
+        })
+        public Patio update(@PathVariable Long id, @RequestBody @Valid Patio patio) {
+                log.info("Atualizando game: " + id);
+
+                getPatio(id);
+                patio.setId_patio(id);
+                return repository.save(patio);
+        }
+
+        private Patio getPatio(Long id) {
+                return repository.findById(id).orElseThrow(() -> new RuntimeException("Patio não encontrado"));
+        }
 }

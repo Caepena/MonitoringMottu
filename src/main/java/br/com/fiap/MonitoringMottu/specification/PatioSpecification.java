@@ -15,8 +15,8 @@ public class PatioSpecification {
         return (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
 
-            if (filter.id_patio() != null && !filter.id_patio().isBlank()) {
-                predicates.add(cb.equal(cb.lower(root.get("id_patio")), "%" + filter.id_patio().toLowerCase() + "%"));
+            if (filter.id_patio() != null) {
+                predicates.add(cb.equal(cb.lower(root.get("id_patio")), "%" + filter.id_patio() + "%"));
             }
 
             if (filter.nome() != null && !filter.nome().isBlank()) {

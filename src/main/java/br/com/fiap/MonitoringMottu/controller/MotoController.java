@@ -33,7 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class MotoController {
 
-    public record MotoFilter(String id, String modelo, String placa, String sensor_iot, String statusMoto, String patio) {
+    public record MotoFilter(Long id, String modelo, String placa, String sensor_iot, String statusMoto, String patio) {
     }
 
     @Autowired

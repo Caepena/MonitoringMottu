@@ -31,7 +31,7 @@ public class MotoSpecification {
                 predicates.add(cb.equal(cb.lower(root.get("statusMoto")), filter.statusMoto().toLowerCase()));
             }
 
-            if (filter.id() != null && !filter.id().isBlank()) {
+            if (filter.id() != null) {
                 predicates.add(cb.equal(root.get("id"), Long.valueOf(filter.id())));
             }
 

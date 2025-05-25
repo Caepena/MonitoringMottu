@@ -11,7 +11,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -38,11 +37,9 @@ public class Posicionamento {
     @JsonIgnore
     private Patio patio;
 
-    @NotBlank(message = "A posição horizontal não pode estar em branco.")
     @Size(min = 1, max = 2, message = "A posição horizontal deve conter um ou dois números apenas")
     private int pos_x;
 
-    @NotBlank(message = "A posição vertical não pode estar em branco.")
     @Size(min = 1, max = 2, message = "A posição vertical deve conter um ou dois números apenas")
     private int pos_y;
 
