@@ -47,7 +47,7 @@ public class PosicionamentoController {
             @ApiResponse(responseCode = "200", description = "Posicionamentos encontrados"),
             @ApiResponse(responseCode = "404", description = "Nenhum posicionamento encontrado") })
     public Page<Posicionamento> index(PosicionamentoFilter filter,
-            @PageableDefault(size = 3, sort = "id_posicionamento", direction = Direction.DESC) Pageable pageable) {
+            @PageableDefault(size = 3, sort = "idPosicionamento", direction = Direction.DESC) Pageable pageable) {
         var specification = PosicionamentoSpecification.withFilters(filter);
         return repository.findAll(specification, pageable);
     }
@@ -59,7 +59,7 @@ public class PosicionamentoController {
             @ApiResponse(responseCode = "201", description = "Posicionamento criado com sucesso"),
             @ApiResponse(responseCode = "400", description = "Erro ao criar posicionamento") })
     public Posicionamento create(@RequestBody @Valid Posicionamento posicionamento) {
-        log.info("Criando novo posicionamento: ", +posicionamento.getId_posicionamento());
+        log.info("Criando novo posicionamento: " + posicionamento.getIdPosicionamento());
         return repository.save(posicionamento);
     }
 
@@ -93,7 +93,7 @@ public class PosicionamentoController {
             @RequestBody @Valid Posicionamento posicionamento) {
         log.info("Atualizando posicionamento: ", +id_posicionamento);
         getPosicionamento(id_posicionamento);
-        posicionamento.setId_posicionamento(id_posicionamento);
+        posicionamento.setIdPosicionamento(id_posicionamento);
         return repository.save(posicionamento);
     }
 

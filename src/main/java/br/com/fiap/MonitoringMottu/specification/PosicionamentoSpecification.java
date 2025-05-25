@@ -17,15 +17,15 @@ public class PosicionamentoSpecification {
             List<Predicate> predicates = new ArrayList<>();
 
             if (filter.id_posicionamento() != null) {
-                predicates.add(cb.equal(cb.lower(root.get("id_posicionamento")), "%" + filter.id_posicionamento() + "%"));
+                predicates.add(cb.equal(root.get("id_posicionamento"), filter.id_posicionamento()));
             }
 
             if (filter.id_moto() != null) {
-                predicates.add(cb.equal(cb.lower(root.get("id_moto")), "%" + filter.id_moto() + "%"));
+                predicates.add(cb.equal(root.get("id_moto"), filter.id_moto()));
             }
 
             if (filter.id_patio() != null) {
-                predicates.add(cb.equal(cb.lower(root.get("id_patio")), "%" + filter.id_patio() + "%"));
+                predicates.add(cb.equal(root.get("id_patio"), filter.id_patio()));
             }
 
             if (filter.data_hora() != null) {

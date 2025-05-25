@@ -39,12 +39,9 @@ public class PatioController {
 
         @GetMapping
         @Cacheable("patios")
-        @Operation(description = "Listar todos os patios", tags = "patios", summary = "List all patios", responses = {
-                        @ApiResponse(responseCode = "200", description = "Patios listados com sucesso"),
-                        @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
-        })
+        @Operation(description = "Lista todos os patios", tags = "patios", summary = "List all patios")
         public Page<Patio> index(PatioFilter filter,
-                        @PageableDefault(size = 3, sort = "nome", direction = Direction.DESC) Pageable pageable) {
+                        @PageableDefault(size = 2, sort = "nome", direction = Direction.DESC) Pageable pageable) {
                 var specification = PatioSpecification.withFilter(filter);
                 return repository.findAll(specification, pageable);
         }
@@ -67,9 +64,9 @@ public class PatioController {
                         @ApiResponse(responseCode = "200", description = "Patio encontrado com sucesso"),
                         @ApiResponse(responseCode = "404", description = "Patio não encontrado")
         })
-        public Patio get(Long id) {
-                log.info("Buscando patio: " + id);
-                return getPatio(id);
+        public Patio get(@PathVariable Long id_patio) {
+                log.info("Buscando patio: " + id_patio);
+                return getPatio(id_patio);
         }
 
         @DeleteMapping("{id_patio}")
@@ -79,9 +76,9 @@ public class PatioController {
                         @ApiResponse(responseCode = "204", description = "Patio deletado com sucesso"),
                         @ApiResponse(responseCode = "404", description = "Patio não encontrado")
         })
-        public void delete(@PathVariable Long id) {
-                log.info("Deletando patio: " + id);
-                repository.delete(getPatio(id));
+        public void delete(@PathVariable Long id_patio) {
+                log.info("Deletando patio: " + id_patio);
+                repository.delete(getPatio(id_patio));
         }
 
         @CacheEvict(value = "patios", allEntries = true)
@@ -91,11 +88,11 @@ public class PatioController {
                         @ApiResponse(responseCode = "200", description = "Patio atualizado com sucesso"),
                         @ApiResponse(responseCode = "404", description = "Patio não encontrado")
         })
-        public Patio update(@PathVariable Long id, @RequestBody @Valid Patio patio) {
-                log.info("Atualizando game: " + id);
+        public Patio update(@PathVariable Long id_patio, @RequestBody @Valid Patio patio) {
+                log.info("Atualizando game: " + id_patio);
 
-                getPatio(id);
-                patio.setId_patio(id);
+                getPatio(id_patio);
+                patio.setId_patio(id_patio);
                 return repository.save(patio);
         }
 

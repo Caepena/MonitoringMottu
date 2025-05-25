@@ -1,12 +1,17 @@
 package br.com.fiap.MonitoringMottu.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.JoinColumn;
+
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -37,8 +42,13 @@ public class Moto {
     @NotBlank(message = "O sensor IoT não pode estar em branco")
     private String sensor_iot;
 
-    @ManyToOne
-    private Patio patio;
+    @OneToOne
+    @JoinColumn(name = "idPosicionamento")
+    private Posicionamento posicionamento;
+
+    @Transient
+    @JsonIgnore
+    private Long idPosicionamento;
 
     @NotNull(message = "A moto deve conter um status")
     @Enumerated(EnumType.STRING)

@@ -3,16 +3,16 @@ package br.com.fiap.MonitoringMottu.model;
 import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,20 +27,19 @@ public class Posicionamento {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_posicionamento;
-
-    @OneToOne
-    @JsonIgnore
-    private Moto moto;
+    private Long idPosicionamento;
 
     @ManyToOne
-    @JsonIgnore
     private Patio patio;
 
-    @Size(min = 1, max = 2, message = "A posição horizontal deve conter um ou dois números apenas")
+    @Min(1)
+    @Max(25)
+    @Positive
     private int pos_x;
 
-    @Size(min = 1, max = 2, message = "A posição vertical deve conter um ou dois números apenas")
+    @Min(1)
+    @Max(25)
+    @Positive
     private int pos_y;
 
     @NotNull(message = "A data é obrigatória")

@@ -1,6 +1,5 @@
 package br.com.fiap.MonitoringMottu.controller;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -19,14 +18,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.fiap.MonitoringMottu.dto.MotoDto;
 import br.com.fiap.MonitoringMottu.model.Moto;
+import br.com.fiap.MonitoringMottu.model.Posicionamento;
 import br.com.fiap.MonitoringMottu.repository.MotoRepository;
+import br.com.fiap.MonitoringMottu.repository.PosicionamentoRepository;
 import br.com.fiap.MonitoringMottu.specification.MotoSpecification;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-
 
 @RestController
 @RequestMapping("/motos")
@@ -38,14 +39,18 @@ public class MotoController {
 
     @Autowired
     private MotoRepository repository;
-    
+
+    @Autowired
+    private PosicionamentoRepository posicionamentoRepository;
+
     @GetMapping
     @Cacheable("motos")
     @Operation(description = "Listar todas as motos", summary = "List all motorycles", tags = "Motos", responses = {
             @ApiResponse(responseCode = "200", description = "Motos encontradas com sucesso"),
             @ApiResponse(responseCode = "404", description = "Nenhuma moto encontrada")
     })
-    public Page<Moto> index(MotoFilter filter, @PageableDefault(size = 3, sort = "placa", direction = Direction.DESC) Pageable pageable) {
+    public Page<Moto> index(MotoFilter filter,
+            @PageableDefault(size = 3, sort = "placa", direction = Direction.DESC) Pageable pageable) {
         var specification = MotoSpecification.withFilter(filter);
         return repository.findAll(specification, pageable);
     }
@@ -57,8 +62,22 @@ public class MotoController {
             @ApiResponse(responseCode = "201", description = "Moto criada com sucesso"),
             @ApiResponse(responseCode = "400", description = "Erro ao criar moto")
     })
-    public Moto create(@RequestBody @Valid Moto moto) {
-        log.info("Criando moto: " + moto.getId()); 
+    public Moto create(@RequestBody @Valid MotoDto dto) {
+
+        log.info("Recebido para criar moto: " + dto);
+
+        // Busca o posicionamento já existente no banco
+        Posicionamento posicionamento = posicionamentoRepository.findById(dto.getIdPosicionamento())
+                .orElseThrow(() -> new RuntimeException("Posicionamento não encontrado"));
+
+        // Converte o DTO para a entidade Moto
+        Moto moto = new Moto();
+        moto.setModelo(dto.getModelo());
+        moto.setPlaca(dto.getPlaca());
+        moto.setSensor_iot(dto.getSensor_iot());
+        moto.setStatusMoto(dto.getStatusMoto());
+        moto.setPosicionamento(posicionamento);
+
         return repository.save(moto);
     }
 
@@ -71,7 +90,6 @@ public class MotoController {
         log.info("Buscando moto: " + id);
         return getMoto(id);
     }
-    
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("{id}")
